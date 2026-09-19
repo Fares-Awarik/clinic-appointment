@@ -19,8 +19,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-Route::resource('doctors', DoctorController::class);
-Route::resource('patients', PatientController::class);
+Route::resource('doctors', DoctorController::class)
+    ->middlewareFor('destroy', 'can:delete doctors');
+Route::resource('patients', PatientController::class)
+    ->middlewareFor('destroy', 'can:delete patients');
 });
 
 require __DIR__.'/auth.php';

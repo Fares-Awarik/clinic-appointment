@@ -35,12 +35,13 @@
             <td>{{ $doctor->is_active ? 'غير نشط' : 'نشط' }}</td>
             <td>
                 <a href="{{ route('doctors.edit', $doctor) }}">تعديل</a>
-                |
+                |@can('delete doctors')
                 <form action="{{ route('doctors.destroy', $doctor) }}" method="POST" style="display:inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit" onclick="return confirm('متأكد إنك بدك تحذف هاد الدكتور؟')">حذف</button>
                 </form>
+                @endcan
             </td>
         </tr>
     @endforeach

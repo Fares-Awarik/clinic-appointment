@@ -41,12 +41,14 @@
             <td>{{ $patient->address }}</td>
             <td>
                 <a href="{{ route('patients.edit', $patient) }}">تعديل</a>
-                |
+                |@can('delete patients')
                 <form action="{{ route('patients.destroy', $patient) }}" method="POST" style="display:inline">
                     @csrf
+                    
                     @method('DELETE')
                     <button type="submit" onclick="return confirm('متأكد إنك بدك تحذف هاد المريض؟')">حذف</button>
                 </form>
+                @endcan
             </td>
         </tr>
     @endforeach

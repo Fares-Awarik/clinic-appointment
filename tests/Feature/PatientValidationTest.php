@@ -106,4 +106,39 @@ class PatientValidationTest extends TestCase
             ->assertNotFound();
         $this->assertDatabaseCount('patients', 0);
     }
+    public function test_receptionist_cannot_delete_patient(): void
+    {
+        $this->seed(\Database\Seeders\RolesSeeder::class);
+
+        $staff = User::factory()->create();
+        $staff->assignRole('receptionist');
+
+        $patient = Patient::create($this->patientData());
+
+        $this->actingAs($staff)
+            ->delete(route('patients.destroy', $patient))
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('patients', [
+            'id' => $patient->id,
+        ]);
+    }
+
+    public function test_admin_can_delete_patient(): void
+    {
+        $this->seed(\Database\Seeders\RolesSeeder::class);
+
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $patient = Patient::create($this->patientData());
+
+        $this->actingAs($admin)
+            ->delete(route('patients.destroy', $patient))
+            ->assertRedirect(route('patients.index'));
+
+        $this->assertDatabaseMissing('patients', [
+            'id' => $patient->id,
+        ]);
+    }
 }
