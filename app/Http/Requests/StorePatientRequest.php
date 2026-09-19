@@ -28,7 +28,7 @@ class StorePatientRequest extends FormRequest
             'age' => 'required|integer|min:0|max:130',
             'email' => 'nullable|email|max:255',
             'gender' => 'required|in:male,female',
-            'phone' => ['required', 'string', 'regex:/\A\+?[0-9]{7,15}\z/'],
+            'phone' => ['required', 'string', 'regex:/\A\+?[0-9]{10,15}\z/'],
             'address' => 'required|string|max:255',
         ];
     }
@@ -36,7 +36,7 @@ class StorePatientRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'phone.regex' => 'رقم الهاتف يجب أن يحتوي على 7 إلى 15 رقمًا، مع + اختيارية في البداية، وبدون مسافات.',
+            'phone.regex' => 'رقم الهاتف يجب أن يحتوي على 10 إلى 15 رقمًا، مع + اختيارية في البداية، وبدون مسافات.',
         ];
     }
 }

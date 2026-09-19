@@ -27,12 +27,12 @@ class PatientValidationTest extends TestCase
 
     public static function validPhones(): array
     {
-        return [['0123456'], ['123456789012345'], ['+905551234567']];
+        return [['0123456789'], ['123456789012345'], ['+905551234567']];
     }
 
     public static function invalidPhones(): array
     {
-        return [['123456'], ['1234567890123456'], ['abc1234567'], ['123+4567'], ['123 4567']];
+        return [['123456789'], ['1234567890123456'], ['abc1234567'], ['123+4567'], ['123 4567']];
     }
 
     #[DataProvider('validPhones')]

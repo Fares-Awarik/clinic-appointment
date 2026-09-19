@@ -7,14 +7,30 @@ use App\Models\Patient;
 
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
-
+use Illuminate\Http\Request;    
 class PatientController extends Controller
 {
-        public function index()
-    {
-        $patients = Patient::all();
-        return view('patients.index' , compact('patients'));
+public function index(Request $request)
+{
+    $validated = $request->validate([
+        'search' => 'nullable|string|max:100',
+    ]);
+
+    $search = trim($validated['search'] ?? '');
+
+    $query = Patient::query();
+
+    if ($search !== '') {
+        $query->where('full_name', 'like', '%' . $search . '%');
     }
+
+    $patients = $query
+    ->orderBy('id')
+    ->paginate(5)
+    ->withQueryString();
+
+    return view('patients.index', compact('patients'));
+}
 
     /**
      * Show the form for creating a new resource.

@@ -7,9 +7,25 @@ use App\Models\Doctor;
 
 class DoctorController extends Controller
 {
-    public function index()
+public function index(Request $request)
 {
-    $doctors = Doctor::all();
+    $validated = $request->validate([
+        'search' => 'nullable|string|max:100',
+    ]);
+
+    $search = trim($validated['search'] ?? '');
+
+    $query = Doctor::query();
+
+    if ($search !== '') {
+        $query->where('name', 'like', '%' . $search . '%');
+    }
+
+    $doctors = $query
+    ->orderBy('id')
+    ->paginate(5)
+    ->withQueryString();
+
     return view('doctors.index', compact('doctors'));
 }
 //هي بتعرض الكاترة الموجودين //

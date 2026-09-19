@@ -1,5 +1,21 @@
 <h1>المريضين</h1>
+<form method="GET" action="{{ route('patients.index') }}">
+    <input
+        type="text"
+        name="search"
+        value="{{ request('search') }}"
+        placeholder="ابحث باسم المريض"
+        maxlength="100"
+    >
 
+    <button type="submit">بحث</button>
+
+    <a href="{{ route('patients.index') }}">عرض الكل</a>
+</form>
+
+@error('search')
+    <p>{{ $message }}</p>
+@enderror
 <a href="{{ route('patients.create') }}">إضافة مريض جديد</a>
 
 <table border="1" cellpadding="8">
@@ -13,7 +29,7 @@
         <th>العنوان</th>
         <th>إجراءات</th>
     </tr>
-
+    
     @foreach ($patients as $patient)
         <tr>
             <td>{{ $patient->full_name }}</td>
@@ -35,3 +51,4 @@
         </tr>
     @endforeach
 </table>
+{{ $patients->links() }}

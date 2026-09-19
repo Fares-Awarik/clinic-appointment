@@ -1,5 +1,21 @@
 <h1>الأطباء</h1>
+<form method="GET" action="{{ route('doctors.index') }}">
+    <input
+        type="text"
+        name="search"
+        value="{{ request('search') }}"
+        placeholder="ابحث باسم الدكتور"
+        maxlength="100"
+    >
 
+    <button type="submit">بحث</button>
+
+    <a href="{{ route('doctors.index') }}">عرض الكل</a>
+</form>
+
+@error('search')
+    <p>{{ $message }}</p>
+@enderror
 <a href="{{ route('doctors.create') }}">إضافة طبيب جديد</a>
 
 <table border="1" cellpadding="8">
@@ -29,3 +45,4 @@
         </tr>
     @endforeach
 </table>
+{{ $doctors->links() }}
