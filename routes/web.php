@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-    use App\Http\Controllers\DoctorController;
-    use App\Http\Controllers\PatientController;
-
+use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\AppointmentController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -23,6 +23,9 @@ Route::resource('doctors', DoctorController::class)
     ->middlewareFor('destroy', 'can:delete doctors');
 Route::resource('patients', PatientController::class)
     ->middlewareFor('destroy', 'can:delete patients');
+
+Route::resource('appointments', AppointmentController::class)
+    ->only(['index', 'create', 'store']);
 });
 
 require __DIR__.'/auth.php';
