@@ -81,6 +81,10 @@ public function index(Request $request)
 
     public function destroy(Doctor $doctor)
     {
+        if ($doctor->appointments()->exists()) {
+    return redirect()->route('doctors.index')
+        ->with('error', 'لا يمكن حذف طبيب لديه مواعيد.');
+}
         $doctor->delete();
 
         return redirect()->route('doctors.index')->with('success', 'تم حذف الدكتور بنجاح');

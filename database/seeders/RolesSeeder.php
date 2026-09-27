@@ -15,12 +15,17 @@ class RolesSeeder extends Seeder
     {
 $deletePatients = Permission::findOrCreate('delete patients', 'web');
 $deleteDoctors = Permission::findOrCreate('delete doctors', 'web');
-
+$changeAppointmentStatus = Permission::findOrCreate('change appointment status', 'web');
 $admin = Role::findOrCreate('admin', 'web');
 Role::findOrCreate('doctor', 'web');
-Role::findOrCreate('receptionist', 'web');
+$receptionist = Role::findOrCreate('receptionist', 'web');
 
 $admin->givePermissionTo($deletePatients);
 $admin->givePermissionTo($deleteDoctors);
+$admin->givePermissionTo($changeAppointmentStatus);
+$receptionist->givePermissionTo($changeAppointmentStatus);
+$createAppointments = Permission::findOrCreate('create appointments', 'web');
+$admin->givePermissionTo($createAppointments);
+$receptionist->givePermissionTo($createAppointments);
     }
 }

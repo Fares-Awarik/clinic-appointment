@@ -25,7 +25,11 @@ Route::resource('patients', PatientController::class)
     ->middlewareFor('destroy', 'can:delete patients');
 
 Route::resource('appointments', AppointmentController::class)
-    ->only(['index', 'create', 'store']);
+    ->only(['index', 'create', 'store'])
+    ->middlewareFor(['create', 'store'], 'can:create appointments');
+    Route::patch('/appointments/{appointment}/status', [AppointmentController::class, 'updateStatus'])
+    ->middleware('can:change appointment status')
+    ->name('appointments.update-status');
 });
 
 require __DIR__.'/auth.php';

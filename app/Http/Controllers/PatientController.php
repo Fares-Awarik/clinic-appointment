@@ -90,6 +90,10 @@ return redirect()->route('patients.index');
     public function destroy(string $id)
     {
             $patient = Patient::findOrFail($id);
+            if ($patient->appointments()->exists()) {
+    return redirect()->route('patients.index')
+        ->with('error', 'لا يمكن حذف مريض لديه مواعيد.');
+}
             $patient->delete();
             return redirect()->route('patients.index');
     }

@@ -5,15 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\Doctor;
+use App\Http\Requests\StoreAppointmentRequest;
+use App\Models\Appointment;
 class AppointmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+        public function index()
+        {
+            $appointments = Appointment::with(['patient', 'doctor'])
+                ->orderBy('starts_at')
+                ->paginate(10);
+
+            return view('appointments.index', compact('appointments'));
+        }
 
     /**
      * Show the form for creating a new resource.
@@ -29,11 +35,24 @@ class AppointmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-    }
+        public function store(StoreAppointmentRequest $request)
+        {
+            Appointment::create($request->validated());
 
+            return redirect()->route('appointments.create')
+                ->with('success', 'تم حفظ الموعد');
+        }
+        public function updateStatus(Request $request, Appointment $appointment)
+        {
+            $validated = $request->validate([
+                'status' => 'required|in:pending,confirmed,cancelled,completed',
+            ]);
+
+            $appointment->update($validated);
+
+            return redirect()->route('appointments.index')
+                ->with('success', 'تم تحديث حالة الموعد.');
+        }
     /**
      * Display the specified resource.
      */

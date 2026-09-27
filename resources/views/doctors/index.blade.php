@@ -1,4 +1,7 @@
 <h1>الأطباء</h1>
+@if (session('error'))
+    <p>{{ session('error') }}</p>
+@endif
 <form method="GET" action="{{ route('doctors.index') }}">
     <input
         type="text"
