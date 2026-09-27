@@ -16,6 +16,8 @@ A Laravel learning project for clinic record management. It brings together doct
 - [`routes/web.php`](routes/web.php): authenticated resource routes and deletion permissions.
 - [`database/migrations/`](database/migrations/): database schema for doctors, patients, and appointments.
 
+Application logic (controllers, validation, migrations, routes) is my own code. View templates use AI-assisted markup on top of logic I wrote myself.
+
 ## Run locally
 
 Requirements: PHP 8.2+, Composer, Node.js/npm, and SQLite with the PHP SQLite extension.
