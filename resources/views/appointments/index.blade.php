@@ -2,6 +2,9 @@
 @if (session('success'))
     <p>{{ session('success') }}</p>
 @endif
+@if (session('error'))
+    <p>{{ session('error') }}</p>
+@endif
 @can('create appointments')
     <a href="{{ route('appointments.create') }}">إضافة موعد</a>
 @endcan

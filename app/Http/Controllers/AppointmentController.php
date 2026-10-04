@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\Doctor;
@@ -37,7 +37,23 @@ class AppointmentController extends Controller
      */
         public function store(StoreAppointmentRequest $request)
         {
-            Appointment::create($request->validated());
+            $validated = $request->validated();
+            $start = Carbon::parse($validated['starts_at']);
+
+            $conflict = Appointment::query()
+                ->where('doctor_id', $validated['doctor_id'])
+                ->where('status', '!=', 'cancelled')
+                ->where('starts_at', '>', $start->copy()->subMinutes(30))
+                ->where('starts_at', '<', $start->copy()->addMinutes(30))
+                ->exists();
+
+            if ($conflict) {
+                return back()
+                    ->withErrors(['starts_at' => 'الطبيب لديه موعد متعارض في هذا الوقت.'])
+                    ->withInput();
+            }
+
+            Appointment::create($validated);
 
             return redirect()->route('appointments.create')
                 ->with('success', 'تم حفظ الموعد');
@@ -47,7 +63,21 @@ class AppointmentController extends Controller
             $validated = $request->validate([
                 'status' => 'required|in:pending,confirmed,cancelled,completed',
             ]);
+            if ($validated['status'] !== 'cancelled') {
+                $start = Carbon::parse($appointment->starts_at);
 
+                $conflict = Appointment::query()
+                    ->where('doctor_id', $appointment->doctor_id)
+                    ->where('id', '!=', $appointment->id)
+                    ->where('status', '!=', 'cancelled')
+                    ->where('starts_at', '>', $start->copy()->subMinutes(30))
+                    ->where('starts_at', '<', $start->copy()->addMinutes(30))
+                    ->exists();
+
+                if ($conflict) {
+                    return back()->with('error', 'لا يمكن تفعيل الموعد لأن وقت الطبيب محجوز.');
+                }
+            }
             $appointment->update($validated);
 
             return redirect()->route('appointments.index')
