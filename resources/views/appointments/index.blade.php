@@ -8,6 +8,12 @@
 @can('create appointments')
     <a href="{{ route('appointments.create') }}">إضافة موعد</a>
 @endcan
+<form method="GET" action="{{ route('appointments.index') }}">
+    <label for="date">تاريخ المواعيد</label>
+    <input type="date" name="date" id="date" value="{{ $date }}">
+    <button type="submit">عرض</button>
+    <a href="{{ route('appointments.index') }}">كل المواعيد</a>
+</form>
 <table border="1">
     <thead>
         <tr>

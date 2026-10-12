@@ -12,13 +12,23 @@ class AppointmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-        public function index()
+        public function index(Request $request)
         {
-            $appointments = Appointment::with(['patient', 'doctor'])
-                ->orderBy('starts_at')
-                ->paginate(10);
+            $validated =$request->validate([
+                'date' => 'nullable|date_format:Y-m-d',
+                ]);
+                $date = $validated['date'] ?? null;
+            $query = Appointment::with(['patient', 'doctor']);
+                if ($date !== null){
 
-            return view('appointments.index', compact('appointments'));
+                    $query->whereDate('starts_at', $date);
+                }
+            $appointments = $query
+                ->orderBy('starts_at')
+                ->paginate(10)
+                ->withQueryString();
+
+            return view('appointments.index', compact('appointments', 'date'));
         }
 
     /**
